@@ -181,7 +181,7 @@ class ESAgent:
             state = next_state
         return ep_score
     
-    def train(self, max_eps=None, plot=False, plotting_interval=10):
+    def train(self, max_eps=30_000, plot=False, plotting_interval=10):
         """train for `max_eps` episodes"""
 
         # ma: mean average
