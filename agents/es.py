@@ -181,9 +181,8 @@ class ESAgent:
             state = next_state
         return ep_score
     
-    def train(self, max_eps=30000, plot=False, plotting_interval=10):
-        """traing for `max_eps` episodes"""
-        self.is_test = False
+    def train(self, max_eps=30_000, plot=False, plotting_interval=10):
+        """train for `max_eps` episodes"""
 
         # ma: mean average
         scores = []
@@ -222,7 +221,7 @@ class ESAgent:
                 #     break
 
         except KeyboardInterrupt:
-            self.save_state('saved-state-undone')
+            self.save_state('saved-state-interrupt')
         else:
             self.save_state()
         
