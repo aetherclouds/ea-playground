@@ -105,6 +105,7 @@ class ESAgent:
         population_size=5,
         learning_rate=1e-2,
         sigma=0.1,
+        save_id=None
     ):
         """
         initialize an agent that uses the Evolutionary Systems algorithm
@@ -114,18 +115,18 @@ class ESAgent:
         :param population_size: how many individuals to create and run simultaneously
         :param learning_rate: learning rate for neural network updates
         :param sigma: how dispersed ES population's weights should be
+        :param save_id: unique identifier for saving parameters into file
         :type hidden_layer_size: int
         :type population_size: int
         :type learning_rate: int
         :type sigma: float
+        :type save_id: str or None
         """
-
         self.device = torch.device(
             "cuda" if torch.cuda.is_available() else "cpu"
         )
         
         self.env = env
-        self.seed = seed
         self.pop_size = population_size
         self.learning_rate = learning_rate
         self.sigma = sigma
@@ -136,8 +137,9 @@ class ESAgent:
 
         self.init_nn()
 
-
         self.gen_scores = np.empty(self.pop_size)
+
+        self.save_id = save_id
 
         print('device:', self.device)
 
@@ -223,7 +225,7 @@ class ESAgent:
                 #     break
 
         except KeyboardInterrupt:
-            self.save_state('saved-state-interrupt')
+            self.save_state('-interrupt')
         else:
             self.save_state()
         
@@ -232,10 +234,12 @@ class ESAgent:
     def populate(self):
         self.population = np.empty(self.POPULATION_SIZE)
     
-    def save_state(self, fname='saved-state'):
+    def save_state(self, extra='state'):
         os.makedirs('saved-states', exist_ok=True)
+        fname = f'{self.id or self.__class__.__name__}.{extra}'
+
         state_dict = self.nn.state_dict()
-        torch.save(state_dict, f'saved-states/{fname}.s{self.seed}.pt')
+        torch.save(state_dict, f'saved-states/{fname}.pt')
         print('saved state!')
         return state_dict
 
