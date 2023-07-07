@@ -10,6 +10,8 @@ from collections import deque
 
 from IPython.display import clear_output
 
+import os
+
 
 class ESNetwork(nn.Module):
     def __init__(
@@ -231,6 +233,7 @@ class ESAgent:
         self.population = np.empty(self.POPULATION_SIZE)
     
     def save_state(self, fname='saved-state'):
+        os.makedirs('saved-states', exist_ok=True)
         state_dict = self.nn.state_dict()
         torch.save(state_dict, f'saved-states/{fname}.s{self.seed}.pt')
         print('saved state!')
@@ -253,8 +256,8 @@ class ESAgent:
         ax1.fill_between(range(len(scores)), np.max(scores, axis=-1), np.min(scores, axis=-1), alpha=0.5)
         ax1.plot(np.mean(scores, axis=-1))
 
-        # clear_output(wait=True)
-        ax1.clear()
+        clear_output(wait=True)
+        # ax1.clear()
 
         plt.show()
 
